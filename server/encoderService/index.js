@@ -45,7 +45,7 @@ app.post('/upload', upload.single('video'), (req, res) => {
 
   Promise.all(
     resolutions.map((resolution) => {
-      const outputFilePath = `${outputDirectory}${Date.now()}-output-${resolution}.mov`;
+      const outputFilePath = `${outputDirectory}${Date.now()}-output-${resolution}.mp4`;
 
       return new Promise((resolve, reject) => {
         ffmpeg(inputFilePath) 
