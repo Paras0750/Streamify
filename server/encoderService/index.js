@@ -10,6 +10,9 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use(require("./routes/encode"));
+const transcodeRoutes = require("./routes/encode");
+app.use("/api", transcodeRoutes);
 
-app.listen(PORT, (err) => console.log(`Server Started On ${PORT}`));
+app.listen(PORT, (err) =>
+  console.log(`Encoder Service Started On port ${PORT}`)
+);

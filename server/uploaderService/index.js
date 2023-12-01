@@ -8,9 +8,9 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use("/api", require("./routes/uploader"));
-
+const uploader = require("./routes/uploader");
+app.use("/api", uploader);
 
 app.listen(process.env.PORT || 3003, (err) =>
-  console.log(`Server Started On ${process.env.PORT || 3003}`)
+  console.log(`Uploader Service Started on port ${process.env.PORT || 3003}`)
 );
