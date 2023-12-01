@@ -6,6 +6,7 @@ const User = require("../models/User");
 
 module.exports = async (req, res) => {
   try {
+
     const { email, password } = req.body;
 
     if (!email || !password)
@@ -18,9 +19,13 @@ module.exports = async (req, res) => {
 
     if (!isMatch) return res.status(400).json({ error: "Invalid credentials" });
 
-    const token = jwt.sign({ id: findUser._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { id: findUser._id, username: findUser.userName },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1d",
+      }
+    );
 
     res.status(200).json({
       token,
@@ -30,7 +35,6 @@ module.exports = async (req, res) => {
         email: findUser.email,
       },
     });
-    
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });

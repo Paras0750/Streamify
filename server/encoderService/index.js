@@ -1,8 +1,6 @@
 require("dotenv").config();
 const cors = require("cors");
 const express = require("express");
-const multer = require("multer");
-const ffmpeg = require("fluent-ffmpeg"); 
 
 require("./modules/db")();
 const PORT = process.env.PORT || 3002;
@@ -12,15 +10,10 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/");
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
-  },
-});
+const transcodeRoutes = require("./routes/encode");
+app.use("/api", transcodeRoutes);
 
+<<<<<<< HEAD
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
@@ -76,3 +69,8 @@ app.post('/upload', upload.single('video'), (req, res) => {
 });
 
 app.listen(PORT, (err) => console.log(`Server Started On ${PORT}`));
+=======
+app.listen(PORT, (err) =>
+  console.log(`Encoder Service Started On port ${PORT}`)
+);
+>>>>>>> develop
