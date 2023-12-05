@@ -6,14 +6,22 @@ const BASE_URL = "http://localhost:3001/api/app";
 const mainApi: AxiosInstance = axios.create({
   baseURL: BASE_URL,
   headers: {
-    "Content-Type": "application/json, multipart/form-data",
+    "Content-Type":
+      "application/json, multipart/form-data, application/x-www-form-urlencoded",
   },
 });
 
-export const getVideo = async (videoId: string) => {
-  const response = await mainApi.post(`/getvideo`, { videoId });
+export const getVideo = async (vidID: string) => {
+  const data = new URLSearchParams();
+  data.append("vidID", vidID);
+
+  const response = await mainApi.post(`/getvideo`, data, {
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  });
+
   return response.data;
 };
+
 
 export const getChannel = async (username: string, config: uploadConfig) => {
   const response = await mainApi.post(

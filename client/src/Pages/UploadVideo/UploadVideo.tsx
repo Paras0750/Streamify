@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from "react";
 import * as Form from "@radix-ui/react-form";
-// import { uploadVideo } from "../../Services/uploader/uploader";
+import { uploadVideo } from "../../Services/uploader/uploader";
 import axios from "axios";
 
 const UploadVideo = () => {
@@ -40,7 +40,7 @@ const UploadVideo = () => {
     if (title) formData.append("title", title);
     if (description) formData.append("description", description);
     console.log("formData: ", formData);
-    
+
     try {
       const authToken = localStorage.getItem("authToken");
       const config = {
@@ -48,13 +48,15 @@ const UploadVideo = () => {
           Authorization: `Bearer ${authToken}`,
           "Content-Type": "multipart/form-data",
         },
+        onUploadProgress: (data: ProgressEvent) => {
+          console.log(data.loaded , data.total, data.lengthComputable);
+          
+        },
       };
       // const res = await uploadVideo(formData, config);
-      const res = await axios.post(
-        "http://localhost:3003/api/upload",
-        formData,
-        config
-      );
+      console.log("Sending request...");
+      const res = await uploadVideo(formData, config);
+      console.log("Sent request...");
       console.log("res: ", res);
     } catch (error) {
       console.error("Error creating channel:", error);

@@ -8,6 +8,7 @@ interface VideoBlockProps {
   username: string;
 }
 
+
 const VideoBlock = (props: VideoBlockProps) => {
   const { title, vidId, thumbnail, username } = props;
   const [displayPic, setDisplayPic] = useState<string>();

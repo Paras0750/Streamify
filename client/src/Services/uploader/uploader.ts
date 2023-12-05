@@ -2,20 +2,24 @@ import axios, { AxiosInstance } from "axios";
 import "../types";
 import { uploadConfig } from "../types";
 
-const BASE_URL = "https://localhost:3003/api";
+const BASE_URL = "http://localhost:3003/api";
 
 const uploaderApi: AxiosInstance = axios.create({
   baseURL: BASE_URL,
   headers: {
-    "Content-Type": "application/json",
+    "Content-Type": "application/json, multipart/form-data",
   },
 });
 
-export const uploadVideo = async (videoData: FormData, config: uploadConfig) => {
-  console.log("Here");
+export const uploadVideo = async (
+  videoData: FormData,
+  config: uploadConfig
+) => {
+  console.log("Starting upload");
   const response = await uploaderApi.post("/upload", videoData, config);
-  console.log("Here2");
-  
+
+  console.log("Upload Finished");
+
   return response.data;
 };
 

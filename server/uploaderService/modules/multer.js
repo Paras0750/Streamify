@@ -4,6 +4,7 @@ const fs = require("fs");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
+    console.log("Recieved file");
     var uploadPath = path.join(__dirname, "../../mainServer/S3Bucket/");
 
     if (file.fieldname === "video" ) {
@@ -32,7 +33,7 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage,
   limits: {
-    fileSize: 1024 * 1024 * 500, // 500 MB
+    // fileSize: 1024 * 1024 * 500, // 500 MB
   },
 });
 

@@ -2,16 +2,6 @@ import { useEffect, useState } from "react";
 import VideoBlock from "./VideoCard";
 import { getFeed } from "../Services/main/main";
 
-// date: "2023-11-30T20:09:30.000Z";
-// description: "Here is the description";
-// m3u8: "1701374954687.m3u8";
-// thumbnail: "/Users/parasnauriyal/Desktop/Streamify/server/mainServer/S3Bucket/Thumbnails/testUser-thumbnail.png";
-// title: "Test Video";
-// username: "testUser";
-// vidId: "96cebc92-91a4-4844-ab22-c68610550ca4";
-// __v: 0;
-// _id: "6568ebfa2a3bed9be35b0091";
-
 interface VideoStruct {
   vidId: string;
   date: string;

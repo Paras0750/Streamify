@@ -16,37 +16,50 @@ interface VideoMetaData {
 }
 
 const VideoPlayer = () => {
-  // Get the 'id' parameter from the route
-  const { id } = useParams();
+  const { id } = useParams<string>();
   const [videoMetaData, setVideoMetaData] = useState<
     VideoMetaData | undefined
   >();
-  console.log("videoMetaData Main: ", videoMetaData);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!id) return;
-    getVideo(id)
-      .then((res) => {
+    const fetchVideoData = async () => {
+      try {
+        if (!id) throw new Error("Invalid video ID");
+        setLoading(true);
+        const res = await getVideo(id);
         console.log("res: ", res);
         setVideoMetaData(res.video);
-      })
-      .catch((err) => {
-        console.log("err: ", err);
-      });
-  }, []);
+      } catch (err) {
+        console.error("Error fetching video data: ", err);
+      } finally {
+        console.log("Finally false");
+        setLoading(false);
+      }
+    };
 
-  console.log("videoMetaData: ", videoMetaData);
+    if (id) fetchVideoData();
+    console.log("Component mounted");
+
+    return () => {
+      // Cleanup code (if needed)
+    };
+  }, []);
 
   return (
     <div>
-      <h2>Video Player</h2>
-
-      <p>Playing video with ID: {id}</p>
-      {videoMetaData ? (
-        <VideoBox videoMetadata={videoMetaData} vidID={videoMetaData?.vidId} />
-      ) : (
-        " loading ..."
-      )}
+      <div>
+        {loading ? (
+          "loading..."
+        ) : videoMetaData ? (
+          <VideoBox
+            videoMetadata={videoMetaData}
+            vidID={videoMetaData?.vidId}
+          />
+        ) : (
+          "No video data available."
+        )}
+      </div>
     </div>
   );
 };

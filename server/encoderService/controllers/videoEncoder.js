@@ -93,7 +93,7 @@ async function processVideo(inputFilePath) {
   const promises = resolutions.map((resolution) => {
     const outputFilePath = path.join(
       outputDirectory,
-      `${uniqueId}-output-${resolution}.m3u8`
+      `${resolution}-output-${uniqueId}.m3u8`
     );
 
     return new Promise((resolve, reject) => {

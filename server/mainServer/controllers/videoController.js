@@ -19,8 +19,9 @@ module.exports.getVideoFeed = async (req, res) => {
 
 module.exports.getVideo = async (req, res) => {
   const { vidID } = req.body;
-  const video = await videoModel.findOne({ vidID: vidID });
-
+  const video = await videoModel.findOne({ vidId: vidID });
+  console.log("videoID: ", vidID);
+  console.log("video: ", video);
   video
     ? res.status(200).json({ status: true, video })
     : res.status(400).json({ status: false, msg: "Failed to get video" });
