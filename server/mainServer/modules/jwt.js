@@ -2,10 +2,11 @@ const jwt = require("jsonwebtoken");
 
 module.exports.protect = (req, res, next) => {
   var token = req.headers.authorization;
-  token = token.split(" ")[1];
   if (!token)
-    return res.status(401).json({ status: false, msg: "No Token Provided" });
+  return res.status(401).json({ status: false, msg: "No Token Provided" });
 
+  token = token.split(" ")[1];
+  
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
       console.log(err);

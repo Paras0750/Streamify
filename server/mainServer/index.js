@@ -28,10 +28,8 @@ app.post("/upload", upload.single("file"), (req, res) => {
   console.log(req.file);
   res.send("File uploaded successfully");
 });
-app.use(
-  "/thumbnails",
-  express.static(path.join(__dirname, "S3Bucket/"))
-);
+
+app.use("/getFile", express.static(path.join(__dirname, "S3Bucket/")));
 
 // Routes
 app.use("/api/app", channelRoutes);

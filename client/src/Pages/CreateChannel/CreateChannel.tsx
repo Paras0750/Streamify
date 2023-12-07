@@ -33,7 +33,8 @@ const CreateChannel = () => {
     setDisplayPic(file);
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const formData = new FormData();
 
     if (bannerImage) formData.append("bannerImage", bannerImage);

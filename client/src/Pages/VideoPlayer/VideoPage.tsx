@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import VideoBox from "./VideoBox";
 import { getVideo } from "../../Services/main/main";
+import NavigationSlide from "../../Components/SideNavigation";
 
 interface VideoMetaData {
   date?: string;
@@ -38,17 +39,14 @@ const VideoPlayer = () => {
       }
     };
 
-    if (id) fetchVideoData();
+    fetchVideoData();
     console.log("Component mounted");
-
-    return () => {
-      // Cleanup code (if needed)
-    };
-  }, []);
+  }, [id]);
 
   return (
-    <div>
-      <div>
+    <div className="grid grid-cols-6 px-5 h-full">
+      <NavigationSlide />
+      <div className="px-8 mx-auto">
         {loading ? (
           "loading..."
         ) : videoMetaData ? (
@@ -57,7 +55,9 @@ const VideoPlayer = () => {
             vidID={videoMetaData?.vidId}
           />
         ) : (
-          "No video data available."
+          <div className="">
+            <p> No video data available. </p>
+          </div>
         )}
       </div>
     </div>

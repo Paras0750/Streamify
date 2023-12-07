@@ -8,8 +8,34 @@ const mainApi: AxiosInstance = axios.create({
   headers: {
     "Content-Type":
       "application/json, multipart/form-data, application/x-www-form-urlencoded",
+    Authorization: `Bearer ${localStorage.getItem("authToken")}`,
   },
 });
+
+export const postComment = async (vidId: string, actualComment: string) => {
+  const data = new URLSearchParams();
+  data.append("vidId", vidId);
+  data.append("actualComment", actualComment);
+
+  const response = await mainApi.post("/comment", data, {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+    },
+  });
+  return response.data;
+};
+
+export const getComment = async (vidId: string) => {
+  const data = new URLSearchParams();
+  data.append("vidId", vidId);
+
+  const response = await mainApi.post(`/getcomments`, data, {
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  });
+
+  return response.data;
+};
 
 export const getVideo = async (vidID: string) => {
   const data = new URLSearchParams();
@@ -21,7 +47,6 @@ export const getVideo = async (vidID: string) => {
 
   return response.data;
 };
-
 
 export const getChannel = async (username: string, config: uploadConfig) => {
   const response = await mainApi.post(

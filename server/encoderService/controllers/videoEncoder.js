@@ -154,3 +154,14 @@ module.exports.stream = (req, res) => {
   res.setHeader("Content-Type", "application/vnd.apple.mpegurl");
   fs.createReadStream(manifestPath).pipe(res);
 };
+
+module.exports.getFile = (req, res) => {
+  const manifestFileName = req.params.file;
+  const manifestPath = path.join(__dirname, "..", "output", manifestFileName);
+
+  if (!fs.existsSync(manifestPath))
+    return res.status(404).json({ status: false, msg: "No Such File Exists" });
+
+  res.setHeader("Content-Type", "application/vnd.apple.mpegurl");
+  fs.createReadStream(manifestPath).pipe(res);
+};

@@ -35,6 +35,7 @@ const VideoSection = () => {
               title={video.title}
               thumbnail={video.thumbnail}
               username={video.username}
+              date={video.date}
             />
           );
         })}

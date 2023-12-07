@@ -4,6 +4,8 @@ const LikedModel = require("../models/likedModel");
 const SubscribedModel = require("../models/subscribedModel");
 const videoModel = require("../models/videoModel");
 const Like = require("../models/likeModel");
+const commentModel = require("../models/CommentModel");
+const channelModel = require("../models/ChannelModel");
 
 module.exports.getVideoFeed = async (req, res) => {
   const { username } = req.user;
@@ -20,8 +22,8 @@ module.exports.getVideoFeed = async (req, res) => {
 module.exports.getVideo = async (req, res) => {
   const { vidID } = req.body;
   const video = await videoModel.findOne({ vidId: vidID });
-  console.log("videoID: ", vidID);
-  console.log("video: ", video);
+  // console.log("videoID: ", vidID);
+  // console.log("video: ", video);
   video
     ? res.status(200).json({ status: true, video })
     : res.status(400).json({ status: false, msg: "Failed to get video" });
@@ -67,9 +69,55 @@ module.exports.unlikevideo = async (req, res) => {};
 
 module.exports.isLiked = async (req, res) => {};
 
-module.exports.comment = async (req, res) => {};
+module.exports.comment = async (req, res) => {
+  const { vidId, actualComment } = req.body;
+  const { username } = req.user;
+  console.log("Comment: ", vidId, actualComment, username);
+  try {
+    console.log("User", req.user);
 
-module.exports.getComments = async (req, res) => {};
+    // Use await to get the result from the findOne method
+    const channelData = await channelModel.findOne({ username: username });
+    console.log("channelData", channelData);
+
+    // Check if channelData is not null before accessing its properties
+    const displayPic = channelData ? channelData.displayPic : null;
+    console.log("displayPic", displayPic);
+
+    console.log("Details: ", vidId, username, displayPic, actualComment);
+    const newComment = new commentModel({
+      vidId,
+      username,
+      displayPic,
+      actualComment,
+    });
+    console.log(newComment);
+    const result = await newComment.save();
+
+    if (result) {
+      res.status(200).json({ response: "Comment Updated!" });
+    } else {
+      res.status(401).json({ response: "Comment Update Failed!" });
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ response: "Internal Server Error" });
+  }
+};
+
+module.exports.getComments = async (req, res) => {
+  const { vidId } = req.body;
+  // console.log("VideoID: getComments: ", vidId, req.body);
+
+  const result = await commentModel.find({ vidId: vidId });
+  // console.log(result);
+
+  if (result) {
+    res.status(200).json({ status: true, comments: result });
+  } else {
+    res.status(400).json({ status: false, err: "Error Occured" });
+  }
+};
 
 module.exports.getChannelFeed = async (req, res) => {};
 

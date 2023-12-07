@@ -26,7 +26,7 @@ module.exports = async (req, res) => {
 
     res.send("Video uploaded successfully.");
   } catch (error) {
-    console.log("Error in videoUploader: ", error);
+    console.log("Error in videoUplwoader: ", error);
     res.status(500).send("Internal Server Error");
   }
 };

@@ -3,20 +3,24 @@ const channelModel = require("../models/ChannelModel");
 const likedModel = require("../models/likedModel");
 const historyModel = require("../models/historyModel");
 const videoModel = require("../models/videoModel");
+const path = require("path");
 
 module.exports.createChannel = async (req, res) => {
   const { userName, bio } = req.body;
 
   try {
     console.log("Auth: ", req.user);
-    console.log("Recieved: ", req.body);
-    console.log("Recieved: ", req.body.userName);
+    console.log("Received: ", req.body);
+    console.log("Received: ", req.body.userName);
+
+    const displayPicFileName = path.basename(req.files.displayPic[0].path);
+    const bannerFileName = path.basename(req.files.bannerImage[0].path);
 
     const newChannel = new channelModel({
       username: userName,
       bio: bio,
-      displayPic: req.files.displayPic[0].path,
-      banner: req.files.bannerImage[0].path,
+      displayPic: displayPicFileName,
+      banner: bannerFileName,
     });
 
     const response = await newChannel.save();
@@ -35,6 +39,7 @@ module.exports.createChannel = async (req, res) => {
       .json({ status: false, msg: `Error Creating Channel: ${error}` });
   }
 };
+
 
 module.exports.getChannel = async (req, res) => {
   try {

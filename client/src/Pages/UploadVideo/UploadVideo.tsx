@@ -1,7 +1,6 @@
 import { ChangeEvent, useState } from "react";
 import * as Form from "@radix-ui/react-form";
 import { uploadVideo } from "../../Services/uploader/uploader";
-import axios from "axios";
 
 const UploadVideo = () => {
   const [title, setTitle] = useState<string>("");
@@ -81,7 +80,7 @@ const UploadVideo = () => {
               className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer p-2
           bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
               type="file"
-              accept="video/*"
+              // accept="video/*"
               onChange={handleVideoChange}
             />
           </div>

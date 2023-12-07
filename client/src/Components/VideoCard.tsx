@@ -1,29 +1,26 @@
 import { useState, useEffect } from "react";
 import { getChannel } from "../Services/main/main";
 import { useNavigate } from "react-router-dom";
+import { set } from "video.js/dist/types/tech/middleware";
 interface VideoBlockProps {
   title: string;
   vidId: string;
   thumbnail: string;
   username: string;
+  date: string;
 }
 
-
 const VideoBlock = (props: VideoBlockProps) => {
-  const { title, vidId, thumbnail, username } = props;
-  const [displayPic, setDisplayPic] = useState<string>();
+  const { title, vidId, username, thumbnail } = props;
+  const [displayPic, setDisplayPic] = useState<string>("");
 
   const navigate = useNavigate();
-
-  const pathWithoutPrefix = thumbnail.replace(
-    "Users/parasnauriyal/Desktop/Streamify/server/mainServer/S3Bucket/Thumbnails/",
-    ""
-  );
-  const thumbnailUrl = `${
-    import.meta.env.VITE_API_MAIN_SERVER
-  }/thumbnails/Thumbnails/${pathWithoutPrefix}`;
+  const [thumbnailLink, setThumbnail] = useState<string>("");
 
   useEffect(() => {
+    setThumbnail(
+      `${import.meta.env.VITE_API_MAIN_SERVER}/getFile/Thumbnails/${thumbnail}`
+    );
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -32,20 +29,17 @@ const VideoBlock = (props: VideoBlockProps) => {
     getChannel(username, config)
       .then((res) => {
         const dp = res.data.channel.displayPic;
-        const pathWithoutPref = dp.replace(
-          "/Users/parasnauriyal/Desktop/Streamify/server/mainServer/S3Bucket/",
-          ""
-        );
         const dpURL = `${
           import.meta.env.VITE_API_MAIN_SERVER
-        }/thumbnails/${pathWithoutPref}`;
+        }/getFile/ChannelImages/${dp}`;
 
         setDisplayPic(dpURL);
+        console.log("dpURL: ", dpURL);
       })
       .catch((err) => {
         console.log("Error: ", err);
       });
-  });
+  },[]);
 
   return (
     <div className="p-5">
@@ -56,7 +50,7 @@ const VideoBlock = (props: VideoBlockProps) => {
         }}
       >
         <img
-          src={`http://localhost:3002/api/stream/1701381015927-output-256x1440.ts`}
+          src={thumbnailLink}
           alt="VideoCard"
           className="aspect-w-16 aspect-h-9 object-cover max-h-[350px]"
         />
@@ -81,7 +75,7 @@ const VideoBlock = (props: VideoBlockProps) => {
         <div className="flex gap-2">
           <div className="text-[14px] font-medium">112k views</div>
           <div className="text-[14px] font-medium">·</div>
-          <div className="text-[14px] font-medium">2 days ago</div>
+          <div className="text-[14px] font-medium">2 Days</div>
         </div>
       </div>
     </div>
