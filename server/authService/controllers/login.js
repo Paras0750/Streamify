@@ -23,10 +23,10 @@ module.exports = async (req, res) => {
       { id: findUser._id, username: findUser.userName },
       process.env.JWT_SECRET,
       {
-        expiresIn: "1d",
+        expiresIn: "7d",
       }
     );
-
+    
     res.status(200).json({
       token,
       user: {

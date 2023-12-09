@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { login } from "../../Services/auth/auth";
 import { useNavigate } from "react-router-dom";
+import { getChannel } from "../../Services/main/main";
+import { useDispatch } from "react-redux";
+import { loginChannel } from "../../Redux/slices/channelSlice";
 
 interface Credentials {
   email: string;
@@ -9,11 +12,12 @@ interface Credentials {
 
 interface LoginResponse {
   token: string;
-  user: [email: string, id: string, userName: string];
+  user: { email: string; id: string; userName: string };
 }
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -32,10 +36,33 @@ const LoginPage: React.FC = () => {
 
       if (res.token) {
         localStorage.setItem("authToken", res.token);
-        navigate("/");
+        // navigate("/");
       }
 
-      console.log("Logged in", res.token);
+      const user = res.user.userName;
+      console.log("user: ", user);
+
+      let channelRes = await getChannel(user, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log("channelRes: ", channelRes.data);
+      if (channelRes.data.status == false) {
+        navigate("/createChannel");
+      } else {
+        dispatch(
+          loginChannel({
+            banner: channelRes.data.channel.banner,
+            bio: channelRes.data.channel.bio,
+            displayPic: channelRes.data.channel.displayPic,
+            username: channelRes.data.channel.username,
+            loggedIn: true,
+          })
+        );
+      }
+
+      console.log("Logged in", res);
     } catch (error) {
       console.error("Login error:", error);
     }

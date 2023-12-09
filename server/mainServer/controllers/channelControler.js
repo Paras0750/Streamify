@@ -40,7 +40,6 @@ module.exports.createChannel = async (req, res) => {
   }
 };
 
-
 module.exports.getChannel = async (req, res) => {
   try {
     const { username } = req.body;
@@ -48,6 +47,11 @@ module.exports.getChannel = async (req, res) => {
 
     const channel = await channelModel.findOne({ username });
     if (channel) res.status(200).json({ status: true, channel });
+    else
+      res.json({
+        status: false,
+        message: "The requested item was not found in the database.",
+      });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });

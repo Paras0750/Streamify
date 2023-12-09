@@ -1,7 +1,6 @@
 import { Send } from "lucide-react";
 import { ChangeEvent, useEffect, useState } from "react";
 import { getComment, postComment } from "../../Services/main/main";
-import { all } from "axios";
 
 interface Comment {
   actualComment: string;
@@ -11,7 +10,7 @@ interface Comment {
   __v: number;
   _id: string;
 }
-const CommentSection = (props) => {
+const CommentSection = (props: Comment) => {
   const { vidId } = props;
   console.log("vidId:: ", vidId);
 
@@ -33,6 +32,7 @@ const CommentSection = (props) => {
     console.log("vidId: ", vidId);
     postComment(vidId, comment).then((res) => {
       console.log("res Comment: ", res);
+      console.log("All Commnet: ", allComments);
       allComments.push(comment);
       setComment("");
     });
@@ -61,7 +61,9 @@ const CommentSection = (props) => {
           <div key={singleComment._id} className="flex items-center gap-5 my-5">
             <img
               className="object-cover h-15 w-15 rounded-full p-1 border-y-2"
-              src={`${import.meta.env.VITE_API_MAIN_SERVER}/getFile/ChannelImages/${singleComment.displayPic}`}
+              src={`${
+                import.meta.env.VITE_API_MAIN_SERVER
+              }/getFile/ChannelImages/${singleComment.displayPic}`}
               alt=""
               width={55}
             />
