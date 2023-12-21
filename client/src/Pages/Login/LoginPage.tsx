@@ -42,7 +42,7 @@ const LoginPage: React.FC = () => {
       const user = res.user.userName;
       console.log("user: ", user);
 
-      let channelRes = await getChannel(user, {
+      const channelRes = await getChannel(user, {
         headers: {
           "Content-Type": "application/json",
         },
