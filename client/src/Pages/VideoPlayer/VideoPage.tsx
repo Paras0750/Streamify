@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import VideoBox from "./VideoBox";
-import { getVideo } from "../../Services/main/main";
+import { getVideo } from "../../Services/mainService";
 import NavigationSlide from "../../Components/SideNavigation";
 
 interface VideoMetaData {

@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from "react";
 import * as Form from "@radix-ui/react-form";
-import { uploadVideo } from "../../Services/uploader/uploader";
+import { uploadVideo } from "../../Services/uploaderService";
 
 const UploadVideo = () => {
   const [title, setTitle] = useState<string>("");
@@ -48,8 +48,7 @@ const UploadVideo = () => {
           "Content-Type": "multipart/form-data",
         },
         onUploadProgress: (data: ProgressEvent) => {
-          console.log(data.loaded , data.total, data.lengthComputable);
-          
+          console.log(data.loaded, data.total, data.lengthComputable);
         },
       };
       // const res = await uploadVideo(formData, config);

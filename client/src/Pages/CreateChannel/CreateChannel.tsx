@@ -1,6 +1,7 @@
 import { ChangeEvent, useState } from "react";
 import * as Form from "@radix-ui/react-form";
-import { createChannel } from "../../Services/main/main";
+import { createChannel } from "../../Services/mainService";
+import { useNavigate } from "react-router-dom";
 
 export interface ChannelDetails {
   userName: string;
@@ -14,7 +15,7 @@ const CreateChannel = () => {
   const [bio, setBio] = useState<string>("");
   const [bannerImage, setBannerImage] = useState<Blob>();
   const [displayPic, setDisplayPic] = useState<Blob>();
-  // const [tempFile, setTempFile] = useState<string>();
+  const navigate = useNavigate();
 
   const handleUsernameChange = (e: ChangeEvent<HTMLInputElement>) => {
     const text = e.target.value;
@@ -33,8 +34,7 @@ const CreateChannel = () => {
     setDisplayPic(file);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     const formData = new FormData();
 
     if (bannerImage) formData.append("bannerImage", bannerImage);
@@ -53,6 +53,9 @@ const CreateChannel = () => {
       };
       const res = await createChannel(formData, config);
       console.log("res: ", res);
+      if (res.status === 200) {
+        navigate("/");
+      }
     } catch (error) {
       console.error("Error creating channel:", error);
     }

@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from "axios";
-import "../types";
-import { uploadConfig } from "../types";
+import "./config";
+import { uploadConfig } from "./config";
 
 const BASE_URL = "http://localhost:3003/api";
 

@@ -9,6 +9,7 @@ import Register from "./Pages/Register/RegisterPage.tsx";
 import CreateChannel from "./Pages/CreateChannel/CreateChannel.tsx";
 import UploadVideo from "./Pages/UploadVideo/UploadVideo.tsx";
 import VideoPlayer from "./Pages/VideoPlayer/VideoPage.tsx";
+import ChannelView from "./Pages/Channel/ChannelView.tsx";
 
 
 const App: React.FC = () => {
@@ -36,6 +37,7 @@ const App: React.FC = () => {
               <Route path="/createChannel" element={<CreateChannel />} />
               <Route path="/uploadVideo" element={<UploadVideo />} />
               <Route path="/playVideo/:id" element={<VideoPlayer />} />
+              <Route path="/channel/:channelId" element={<ChannelView />} />
             </Routes>
           </BrowserRouter>
 

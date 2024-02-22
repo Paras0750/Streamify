@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import { getChannel } from "../Services/main/main";
+import { getChannel } from "../Services/mainService";
 import { useNavigate } from "react-router-dom";
-import { set } from "video.js/dist/types/tech/middleware";
 interface VideoBlockProps {
   title: string;
   vidId: string;
@@ -18,9 +17,12 @@ const VideoBlock = (props: VideoBlockProps) => {
   const [thumbnailLink, setThumbnail] = useState<string>("");
 
   useEffect(() => {
-    setThumbnail(
-      `${import.meta.env.VITE_API_MAIN_SERVER}/getFile/Thumbnails/${thumbnail}`
-    );
+    const thumbnailLink = `${
+      import.meta.env.VITE_API_MAIN_SERVER
+    }/getFile/Thumbnails/${thumbnail}`;
+    console.log(thumbnailLink);
+
+    setThumbnail(thumbnailLink);
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -34,12 +36,11 @@ const VideoBlock = (props: VideoBlockProps) => {
         }/getFile/ChannelImages/${dp}`;
 
         setDisplayPic(dpURL);
-        console.log("dpURL: ", dpURL);
       })
       .catch((err) => {
         console.log("Error: ", err);
       });
-  },[]);
+  }, [thumbnail, username]);
 
   return (
     <div className="p-5">

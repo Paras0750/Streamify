@@ -1,39 +1,37 @@
 import { Send } from "lucide-react";
 import { ChangeEvent, useEffect, useState } from "react";
-import { getComment, postComment } from "../../Services/main/main";
+import { getComment, postComment } from "../../Services/mainService";
 
 interface Comment {
+  vidId: string;
   actualComment: string;
   displayPic: string;
   username: string;
-  vidId: string;
   __v: number;
   _id: string;
 }
-const CommentSection = (props: Comment) => {
+interface CommentSectionProps {
+  vidId: string;
+}
+
+const CommentSection = (props: CommentSectionProps) => {
   const { vidId } = props;
   console.log("vidId:: ", vidId);
 
-  const [comment, setComment] = useState<string>("");
+  const [myComment, setComment] = useState<string>("");
   const [allComments, setAllComments] = useState<Comment[]>([]);
 
   useEffect(() => {
     getComment(vidId).then((com) => {
       setAllComments(com.comments);
     });
-  }, []);
-
-  const handleCommentChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setComment(e.target.value);
-  };
+  }, [vidId]);
 
   const handleSubmit = () => {
-    console.log("comment: ", comment);
-    console.log("vidId: ", vidId);
-    postComment(vidId, comment).then((res) => {
+    console.log("myComment: ", myComment);
+    postComment(vidId, myComment).then((res) => {
       console.log("res Comment: ", res);
       console.log("All Commnet: ", allComments);
-      allComments.push(comment);
       setComment("");
     });
   };
@@ -45,9 +43,11 @@ const CommentSection = (props: Comment) => {
         <input
           type="text"
           className={`p-2 ml-2 bg-transparent border-black w-full outline-none dark:text-white`}
-          placeholder="Add a comment!"
-          onChange={handleCommentChange}
-          value={comment}
+          placeholder="Add a myComment!"
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setComment(e.target.value)
+          }
+          value={myComment}
         />
         <button
           onClick={handleSubmit}
@@ -56,7 +56,7 @@ const CommentSection = (props: Comment) => {
           <Send /> Comment
         </button>
       </div>
-      <div className="">
+      <div className="mb-12">
         {allComments.map((singleComment) => (
           <div key={singleComment._id} className="flex items-center gap-5 my-5">
             <img

@@ -1,4 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
+export interface ChannelDetails {
+  banner: string;
+  bio: string;
+  displayPic: string;
+  username: string;
+  loggedIn: boolean;
+}
+
+export interface ChannelState {
+  channel: ChannelDetails;
+}
 
 const channelSlice = createSlice({
   name: "channelDetail",
@@ -16,5 +27,5 @@ const channelSlice = createSlice({
 });
 
 export const { loginChannel, logoutChannel } = channelSlice.actions;
-export const selectChannel = (state: any) => state.channel.channel;
+// export const selectChannel = (state: ChannelState) => state.channel.channel;
 export default channelSlice.reducer;

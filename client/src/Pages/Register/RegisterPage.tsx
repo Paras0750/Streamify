@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { register } from "../../Services/auth/auth";
+import { register } from "../../Services/authService";
 import { useNavigate } from "react-router-dom";
 
 interface Credentials {

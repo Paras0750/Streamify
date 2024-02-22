@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import ReactPlayer from "react-player";
-import { getVideo } from "../../Services/main/main";
-import { Send, ThumbsDownIcon, ThumbsUpIcon } from "lucide-react";
+import { ThumbsDownIcon, ThumbsUpIcon } from "lucide-react";
 import CommentSection from "./CommentSection";
 
 interface VideoMetaData {
@@ -23,21 +22,22 @@ interface VideoBoxProps {
 // http://localhost:3001/getFile/Thumbnails
 
 const VideoBox = (props: VideoBoxProps) => {
-  const { vidID, videoMetadata } = props;
+  const { videoMetadata } = props;
   console.log("videoMetadata: ", videoMetadata);
 
   const [videoURL, setvideoURL] = useState<string>("");
 
   console.log("videoURL: ", videoURL);
-  const selectRef: any = useRef();
+  const selectRef = useRef<HTMLSelectElement>(null);
 
   useEffect(() => {
     if (!videoMetadata) return;
     selectManifest();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [videoURL]);
 
   const selectManifest = (): void => {
-    const selected = selectRef.current.value;
+    const selected = selectRef.current?.value;
     const urlPrefix = `${import.meta.env.VITE_API_STREAM_URL}/api/stream/`;
 
     if (!videoMetadata || !videoMetadata.m3u8) {
@@ -121,7 +121,9 @@ const VideoBox = (props: VideoBoxProps) => {
         <div className="flex items-center">
           <img
             className="w-20 h-20 rounded-full"
-            src="https://media.geeksforgeeks.org/wp-content/uploads/20230608103241/chrome-capture-2023-5-8.png"
+            // src={`${
+            //   import.meta.env.VITE_API_MAIN_SERVER
+            // }/getFile/ChannelImages/${singleComment.displayPic}`}
             alt=""
           />
           <div className="font-semibold text-xl ml-2">
@@ -131,7 +133,7 @@ const VideoBox = (props: VideoBoxProps) => {
         <div className="bg-red-400 px-4 py-3 rounded-2xl">Subscribe</div>
       </div>
 
-      <CommentSection vidId={videoMetadata.vidId}/>
+      <CommentSection vidId={videoMetadata.vidId} />
     </div>
   );
 };

@@ -1,15 +1,31 @@
-import { useContext, useEffect } from "react";
+import { MouseEvent, useContext, useEffect } from "react";
 import logo from "../assets/logo2.jpeg";
 import { Moon, Search, Sun } from "lucide-react";
 import { ThemeContext } from "../Context/ThemeContext";
+import {
+  ChannelDetails,
+  logoutChannel,
+  // selectChannel,
+} from "../Redux/slices/channelSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const Header = () => {
   const context = useContext(ThemeContext);
   const { theme, setTheme } = context || { theme: "light", setTheme: () => {} };
+  useSelector((state: ChannelDetails) => console.log(state));
+  const dispatch = useDispatch();
 
   useEffect(() => {
     console.log("theme: ", theme);
   }, [theme]);
+
+  function handleLogout(
+    event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
+  ): void {
+    event.preventDefault();
+    dispatch(logoutChannel());
+    window.location.href = "/login";
+  }
 
   return (
     <div className={`flex items-center p-3 `}>
@@ -47,6 +63,15 @@ const Header = () => {
             }}
           />
         )}
+      </div>
+      <div className="px-2">
+        <button
+          type="button"
+          className="border p-2 rounded bg-gray-50"
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
       </div>
     </div>
   );

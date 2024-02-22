@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { login } from "../../Services/auth/auth";
+import { login } from "../../Services/authService";
 import { useNavigate } from "react-router-dom";
-import { getChannel } from "../../Services/main/main";
+import { getChannel } from "../../Services/mainService";
 import { useDispatch } from "react-redux";
 import { loginChannel } from "../../Redux/slices/channelSlice";
 
@@ -36,7 +36,7 @@ const LoginPage: React.FC = () => {
 
       if (res.token) {
         localStorage.setItem("authToken", res.token);
-        // navigate("/");
+        navigate("/");
       }
 
       const user = res.user.userName;
