@@ -1,4 +1,4 @@
-import { MouseEvent, useContext, useEffect } from "react";
+import { MouseEvent, useContext, useEffect, useRef, useState } from "react";
 import logo from "../assets/logo2.jpeg";
 import { Moon, Search, Sun } from "lucide-react";
 import { ThemeContext } from "../Context/ThemeContext";
@@ -12,11 +12,29 @@ import { useDispatch, useSelector } from "react-redux";
 const Header = () => {
   const context = useContext(ThemeContext);
   const { theme, setTheme } = context || { theme: "light", setTheme: () => {} };
-  useSelector((state: ChannelDetails) => console.log(state));
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const user = useSelector(
+    (state: { channel: { channel: ChannelDetails } }) => state.channel.channel
+  );
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     console.log("theme: ", theme);
+    const handleClickOutside = (event: MouseEvent | Event): void => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, [theme]);
 
   function handleLogout(
@@ -65,13 +83,58 @@ const Header = () => {
         )}
       </div>
       <div className="px-2">
-        <button
-          type="button"
-          className="border p-2 rounded bg-gray-50"
-          onClick={handleLogout}
-        >
-          Logout
-        </button>
+        {user ? (
+          <div
+            className="relative cursor-pointer"
+            ref={dropdownRef}
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          >
+            <div className="flex items-center gap-4 dark:text-white">
+              <div className="px-2">{user.username}</div>
+              <img
+                className="rounded-full "
+                src={`${
+                  import.meta.env.VITE_API_MAIN_SERVER
+                }/getFile/ChannelImages/${user.displayPic}`}
+                width={40}
+                height={40}
+              />
+            </div>
+
+            {isDropdownOpen && (
+              <div
+                className="absolute bg-white rounded-lg shadow-md top-full mt-2 border"
+                style={{ right: "0px", zIndex: "5" }}
+              >
+                <div className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-200 cursor-pi">
+                  Profile
+                </div>
+                <div className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-200 cursor-pi">
+                  History
+                </div>
+                <button
+                  type="button"
+                  className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-200"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="bg-white rounded-lg font-semibold">
+            <button
+              type="button"
+              className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-200"
+              onClick={() => {
+                window.location.href = "/login";
+              }}
+            >
+              Login
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
