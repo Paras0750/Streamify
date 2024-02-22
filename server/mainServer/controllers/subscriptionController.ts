@@ -1,10 +1,10 @@
-const subscribedModel = require("../models/subscribedModel");
-const subscriberModel = require("../models/subscriberModel");
+import { Request, Response } from "express";
+import subscribedModel from "../models/SubscribedModel";
+import subscriberModel from "../models/SubscriberModel";
+import { CustomReq } from "./channelControler";
 
-module.exports.createCollections = async (req, res) => {
-
-  const {  username } = req.user;
-
+export const createCollections = async (req: CustomReq, res: Response) => {
+  const { username } = req.user;
 
   let isSubscriberModel = await subscriberModel.findOne({ username });
   let isSubscribedModel = await subscribedModel.findOne({ username });
@@ -34,7 +34,7 @@ module.exports.createCollections = async (req, res) => {
         .json({ status: false, msg: "Error creating collections" });
 };
 
-module.exports.mySubscriptions = async (req, res) => {
+export const mySubscriptions = async (req: CustomReq, res: Response) => {
   const subscribed = await subscribedModel.findOne({
     username: req.user.username,
   });
@@ -45,7 +45,7 @@ module.exports.mySubscriptions = async (req, res) => {
         .json({ status: false, msg: "Error getting subscribed channels" });
 };
 
-module.exports.subscribe = async (req, res) => {
+export const subscribe = async (req: CustomReq, res: Response) => {
   const { subscribe } = req.body;
 
   try {
@@ -89,7 +89,7 @@ module.exports.subscribe = async (req, res) => {
   }
 };
 
-module.exports.unsubscribe = async (req, res) => {
+export const unsubscribe = async (req: CustomReq, res: Response) => {
   const { unsubscribe } = req.body;
 
   try {
@@ -124,12 +124,10 @@ module.exports.unsubscribe = async (req, res) => {
 
       res.status(200).json({ status: true });
     } else {
-      res
-        .status(400)
-        .json({
-          status: false,
-          msg: `You are not subscribed to ${unsubscribe}`,
-        });
+      res.status(400).json({
+        status: false,
+        msg: `You are not subscribed to ${unsubscribe}`,
+      });
     }
   } catch (error) {
     console.error(error);
@@ -137,7 +135,7 @@ module.exports.unsubscribe = async (req, res) => {
   }
 };
 
-module.exports.isSubscribed = async (req, res) => {
+export const isSubscribed = async (req: CustomReq, res: Response) => {
   const { username } = req.body;
 
   const isSubscribed = await subscribedModel.findOne({
@@ -149,4 +147,3 @@ module.exports.isSubscribed = async (req, res) => {
     ? res.status(200).json({ status: true })
     : res.status(200).json({ status: false });
 };
- 

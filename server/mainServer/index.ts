@@ -1,18 +1,19 @@
-require("dotenv").config();
-require("./modules/db")();
+import { Request, Response } from "express";
+import * as dotenv from "dotenv";
+import connectDB from "./modules/db";
+import * as path from "path";
+import upload from "./modules/multer";
+import express from "express";
+import cors from "cors";
+import channelRoutes from "./routes/channelRoutes";
+import subscriptionRoutes from "./routes/subscribeRoutes";
+import videoRoutes from "./routes/videoRoutes";
 
-const path = require("path");
-const upload = require("./modules/multer");
+dotenv.config();
+connectDB();
 
-const express = require("express");
 const app = express();
-const cors = require("cors");
-// const userRoutes = require("./routes/userRoutes");
 const PORT = process.env.PORT || 3001;
-
-const channelRoutes = require("./routes/channelRoutes");
-const subscriptionRoutes = require("./routes/subscribeRoutes");
-const videoRoutes = require("./routes/videoRoutes");
 
 // Middleware
 app.use(
@@ -24,7 +25,7 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.post("/upload", upload.single("file"), (req, res) => {
+app.post("/upload", upload.single("file"), (req: Request, res: Response) => {
   console.log(req.file);
   res.send("File uploaded successfully");
 });

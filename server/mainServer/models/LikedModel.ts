@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const likedSchema = new mongoose.Schema({
   username: {
@@ -11,3 +11,4 @@ const likedSchema = new mongoose.Schema({
 const likedModel = mongoose.model("LikedVideosModel", likedSchema);
 
 module.exports = likedModel;
+export default likedModel;

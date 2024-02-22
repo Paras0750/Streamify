@@ -1,14 +1,9 @@
 const router = require("express").Router();
-const { protect } = require("../modules/jwt");
-const {
-  createCollections,
-  mySubscriptions,
-  subscribe,
-  unsubscribe,
-  isSubscribed,
-} = require("../controllers/subscriptionController");
+import protect from "../modules/jwt";
+import { createCollections, mySubscriptions, subscribe, unsubscribe, isSubscribed } from "../controllers/subscriptionController";
+import { Request, Response } from "express";
 
-router.post("/test", protect, (req, res) => {
+router.post("/test", protect, (req: Request, res: Response) => {
   res.send("Hey!");
 });
 router.get("/createcollection", protect, createCollections);
@@ -18,4 +13,4 @@ router.post("/subscribe", protect, subscribe);
 router.post("/unsubscribe", protect, unsubscribe);
 router.post("/issubscribed", protect, isSubscribed);
 
-module.exports = router;
+export default router;

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const channelSchema = new mongoose.Schema({
   username: {
@@ -19,3 +19,5 @@ const channelSchema = new mongoose.Schema({
 const channelModel = mongoose.model("channelModel", channelSchema);
 
 module.exports = channelModel;
+
+export default channelModel;

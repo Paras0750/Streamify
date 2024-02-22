@@ -1,6 +1,6 @@
 const router = require('express').Router();
-const { protect } = require('../modules/jwt');
-const { getVideoFeed, getVideo, likevideo, getLikeCount, unlikevideo, isLiked, comment, getComments, getChannelFeed, getPublicFeed } = require('../controllers/videoController');
+import protect  from '../modules/jwt';
+import { getVideoFeed, getVideo, likevideo, getLikeCount, unlikevideo, isLiked, comment, getComments, getChannelFeed, getPublicFeed } from '../controllers/videoController';
 
 router.get('/getfeed', protect, getVideoFeed);
 router.post('/getvideo', getVideo);
@@ -13,4 +13,4 @@ router.post('/getcomments', getComments);
 router.post('/getchannelfeed', getChannelFeed);
 router.get('/getpublicfeed', getPublicFeed);
 
-module.exports = router;
+export default router;

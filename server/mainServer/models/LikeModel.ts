@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const likeSchema = new mongoose.Schema({
   vid: {
@@ -10,4 +10,4 @@ const likeSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("LikeModel", likeSchema);
+export default mongoose.model("LikeModel", likeSchema);

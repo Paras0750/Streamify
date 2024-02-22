@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const commentSchema = new mongoose.Schema({
   vidId: {
@@ -19,6 +19,4 @@ const commentSchema = new mongoose.Schema({
   },
 });
 
-const commentModel = mongoose.model("commentModel", commentSchema);
-
-module.exports = commentModel;
+export default mongoose.model("commentModel", commentSchema);

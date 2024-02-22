@@ -1,13 +1,7 @@
 const router = require("express").Router();
-const upload = require("../modules/multer");
-const { protect } = require("../modules/jwt");
-const {
-  createChannel,
-  getChannel,
-  pushHistory,
-  getHistory,
-  myinfo
-} = require("../controllers/channelControler");
+import upload from "../modules/multer";
+import  protect from "../modules/jwt";
+import { createChannel, getChannel, pushHistory, getHistory, myinfo } from "../controllers/channelControler";
 
 router.get("/gethistory", protect, getHistory);
 router.get('/myinfo',protect, myinfo);
@@ -17,3 +11,4 @@ router.post("/getchannel", getChannel);
 router.post("/posthistory", protect, pushHistory);
 
 module.exports = router;
+export default router;

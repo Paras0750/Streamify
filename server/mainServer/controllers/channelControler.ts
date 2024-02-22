@@ -1,11 +1,21 @@
-const mongoose = require("mongoose");
-const channelModel = require("../models/ChannelModel");
-const likedModel = require("../models/likedModel");
-const historyModel = require("../models/historyModel");
-const videoModel = require("../models/videoModel");
-const path = require("path");
+import mongoose from "mongoose";
+import channelModel from "../models/ChannelModel";
+import likedModel from "../models/LikedModel";
+import historyModel from "../models/HistoryModel";
+import videoModel from "../models/VideoModel";
+import path from "path";
+import { Request, Response } from "express";
 
-module.exports.createChannel = async (req, res) => {
+export interface CustomReq extends Request {
+  user: any;
+  files: any;
+  body: any;
+}
+
+interface historyType {
+  history?: any;
+}
+export const createChannel = async (req: CustomReq, res: Response) => {
   const { userName, bio } = req.body;
 
   try {
@@ -40,7 +50,7 @@ module.exports.createChannel = async (req, res) => {
   }
 };
 
-module.exports.getChannel = async (req, res) => {
+export const getChannel = async (req: CustomReq, res: Response) => {
   try {
     const { username } = req.body;
     console.log("Recieved: ", req.body);
@@ -58,12 +68,14 @@ module.exports.getChannel = async (req, res) => {
   }
 };
 
-module.exports.pushHistory = async (req, res) => {
+export const pushHistory = async (req: CustomReq, res: Response) => {
   const { vid } = req.body;
   const { username } = req.user;
 
   let history = await historyModel.findOne({ username });
-  history = history.history;
+  if (!history) await historyModel.create({ username, history: [vid] });
+
+  history = history?.history;
 
   const index = history.indexOf(vid);
 
@@ -77,7 +89,7 @@ module.exports.pushHistory = async (req, res) => {
 };
 
 // not tested
-module.exports.getHistory = async (req, res) => {
+export const getHistory = async (req: CustomReq, res: Response) => {
   const { username } = req.user;
   let history = await historyModel.findOne({ username });
   history = history.history;
@@ -91,7 +103,7 @@ module.exports.getHistory = async (req, res) => {
   res.status(200).json({ status: true, history: historyfeed });
 };
 
-module.exports.myinfo = (req, res) => {
+export const myinfo = async (req: CustomReq, res: Response) => {
   const { username } = req.user;
   res.status(200).json({ status: true, username });
 };

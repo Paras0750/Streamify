@@ -1,17 +1,20 @@
 // const { getVideoFeed, getVideo, likevideo, getLikeCount, unlikevideo, isLiked, comment, getComments, getChannelFeed, getPublicFeed } = require('../controllers/videoController');
 
-const LikedModel = require("../models/likedModel");
-const SubscribedModel = require("../models/subscribedModel");
-const videoModel = require("../models/videoModel");
-const Like = require("../models/likeModel");
-const commentModel = require("../models/CommentModel");
-const channelModel = require("../models/ChannelModel");
+import { Response } from "express";
+import { CustomReq } from "./channelControler";
 
-module.exports.getVideoFeed = async (req, res) => {
+import LikedModel from "../models/LikedModel";
+import SubscribedModel from "../models/SubscribedModel";
+import videoModel from "../models/VideoModel";
+import Like from "../models/LikeModel";
+import commentModel from "../models/CommentModel";
+import channelModel from "../models/ChannelModel";
+
+export const getVideoFeed = async (req: CustomReq, res: Response) => {
   const { username } = req.user;
 
   const subscribed = await SubscribedModel.find({ username });
-  subscribed = subscribed.subscribed;
+  subscribed = subscribed.subscribed; 
 
   const feed = await videoModel.find({ username: { $in: subscribed } });
 
@@ -19,7 +22,7 @@ module.exports.getVideoFeed = async (req, res) => {
   else res.status(400).json({ status: false, msg: "Failed to get feed" });
 };
 
-module.exports.getVideo = async (req, res) => {
+export const getVideo = async (req: CustomReq, res: Response) => {
   const { vidID } = req.body;
   const video = await videoModel.findOne({ vidId: vidID });
   // console.log("videoID: ", vidID);
@@ -29,7 +32,7 @@ module.exports.getVideo = async (req, res) => {
     : res.status(400).json({ status: false, msg: "Failed to get video" });
 };
 
-module.exports.likevideo = async (req, res) => {
+export const likevideo = async (req: CustomReq, res: Response) => {
   try {
     const { vid } = req.body;
     const { username } = req.user;
@@ -63,13 +66,13 @@ module.exports.likevideo = async (req, res) => {
   }
 };
 
-module.exports.getLikeCount = async (req, res) => {};
+export const getLikeCount = async (req: CustomReq, res: Response) => {};
 
-module.exports.unlikevideo = async (req, res) => {};
+export const unlikevideo = async (req: CustomReq, res: Response) => {};
 
-module.exports.isLiked = async (req, res) => {};
+export const isLiked = async (req: CustomReq, res: Response) => {};
 
-module.exports.comment = async (req, res) => {
+export const comment = async (req: CustomReq, res: Response) => {
   const { vidId, actualComment } = req.body;
   const { username } = req.user;
   console.log("Comment: ", vidId, actualComment, username);
@@ -105,7 +108,7 @@ module.exports.comment = async (req, res) => {
   }
 };
 
-module.exports.getComments = async (req, res) => {
+export const getComments = async (req: CustomReq, res: Response) => {
   const { vidId } = req.body;
   // console.log("VideoID: getComments: ", vidId, req.body);
 
@@ -119,9 +122,9 @@ module.exports.getComments = async (req, res) => {
   }
 };
 
-module.exports.getChannelFeed = async (req, res) => {};
+export const getChannelFeed = async (req: CustomReq, res: Response) => {};
 
-module.exports.getPublicFeed = async (req, res) => {
+export const getPublicFeed = async (req: CustomReq, res: Response) => {
   const feed = await videoModel
     .find()
     .sort({ date: -1 }) //  sort by date in descending order (latest videos first)

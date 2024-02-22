@@ -1,17 +1,15 @@
-const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
+import multer from "multer";
+import * as path from "path";
+import * as fs from "fs";
+import { Request } from "express";
 
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-
-    var uploadPath = path.join(__dirname, '../S3Bucket/');
-    // Use an absolute path for better reliability
+  destination: (req: Request, file, cb) => {
+    let uploadPath = path.join(__dirname, "../S3Bucket/");
     if (file.fieldname === "displayPic" || file.fieldname === "bannerImage") {
-       uploadPath = path.join(__dirname, '../S3Bucket/ChannelImages/');
+      uploadPath = path.join(__dirname, "../S3Bucket/ChannelImages/");
     }
 
-    // Ensure the destination path exists
     if (!fs.existsSync(uploadPath)) {
       fs.mkdirSync(uploadPath, { recursive: true });
     }
@@ -32,4 +30,4 @@ const upload = multer({
   // },
 });
 
-module.exports = upload;
+export default upload;
