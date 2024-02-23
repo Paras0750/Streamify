@@ -111,6 +111,7 @@ export const unsubscribe = async (req: CustomReq, res: Response) => {
         username: unsubscribe,
       });
       if (subscribedListOfUnsubscribe) {
+        // @ts-ignore
         let subscribers = subscribedListOfUnsubscribe.subscribers || [];
         const index = subscribers.indexOf(req.user.username);
         if (index !== -1) {

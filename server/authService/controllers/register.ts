@@ -1,10 +1,11 @@
-const mongoose = require("mongoose");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
+import { sign } from "jsonwebtoken";
+import { genSalt, hash } from "bcryptjs";
 
-const User = require("../models/User");
+import User from "../models/User";
 
-module.exports = async (req, res) => {
+import { Request, Response } from "express";
+
+export default async (req: Request, res: Response) => {
   try {
     const { userName, email, password } = req.body;
 
@@ -14,8 +15,8 @@ module.exports = async (req, res) => {
     const user = await User.findOne({ email: email });
     if (user) return res.status(400).json({ error: "User already exists" });
 
-    const salt = await bcrypt.genSalt(10);
-    const hashPass = await bcrypt.hash(password, salt);
+    const salt = await genSalt(10);
+    const hashPass = await hash(password, salt);
 
     const newUser = new User({
       userName,
@@ -25,9 +26,9 @@ module.exports = async (req, res) => {
 
     await newUser.save();
 
-    const token = jwt.sign(
+    const token = sign(
       { id: newUser._id, username: newUser.userName },
-      process.env.JWT_SECRET,
+      process.env.JWT_SECRET || "",
       {
         expiresIn: "1h",
       }

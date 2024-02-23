@@ -1,10 +1,9 @@
 import multer from "multer";
 import * as path from "path";
 import * as fs from "fs";
-import { Request } from "express";
 
 const storage = multer.diskStorage({
-  destination: (req: Request, file, cb) => {
+  destination: (req, file, cb) => {
     let uploadPath = path.join(__dirname, "../S3Bucket/");
     if (file.fieldname === "displayPic" || file.fieldname === "bannerImage") {
       uploadPath = path.join(__dirname, "../S3Bucket/ChannelImages/");
@@ -19,6 +18,7 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     console.log("File: ", file);
     const ext = path.extname(file.originalname);
+    // @ts-ignore
     cb(null, `${req.user.username}-${file.fieldname}${ext}`);
   },
 });

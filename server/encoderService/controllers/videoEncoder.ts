@@ -1,14 +1,26 @@
-const ffmpeg = require("fluent-ffmpeg");
-const amqplib = require("amqplib");
-const fs = require("fs");
-const path = require("path");
-const Video = require("../models/VideoModel");
-const Like = require("../models/Like");
-const ChannelModel = require("../models/ChannelModel");
+import ffmpeg from "fluent-ffmpeg";
+import { connect } from "amqplib";
+import { writeFileSync, existsSync, createReadStream } from "fs";
+import { join, basename } from "path";
+import Video from "../models/VideoModel";
+import Like from "../models/Like";
+import ChannelModel from "../models/ChannelModel";
+import { Request, Response } from "express";
+
+interface VideoContent {
+  videoUrl: string;
+  username: string;
+  vidId: string;
+  title: string;
+  description: string;
+  thumbnailUrl: string;
+  dp: string;
+  m3u8: string;
+}
 
 (async () => {
   const queue = process.env.QUEUE_NAME || "test-queue";
-  const conn = await amqplib.connect("amqp://localhost");
+  const conn = await connect("amqp://localhost");
 
   const ch1 = await conn.createChannel();
   await ch1.assertQueue(queue);
@@ -17,22 +29,15 @@ const ChannelModel = require("../models/ChannelModel");
   ch1.consume(queue, async (msg) => {
     if (msg !== null) {
       console.log("Recieved:", msg.content.toString());
-      const content = JSON.parse(msg.content.toString());
+      const content: VideoContent = JSON.parse(msg.content.toString());
       const manifestFileName = await processVideo(content.videoUrl);
       const { username, vidId, title, description, thumbnailUrl } = content;
 
       var dp = new ChannelModel({ username });
+      // @ts-ignore
       dp = dp.displayPic;
 
-      await SaveVideoMetaData(
-        username,
-        dp,
-        vidId,
-        manifestFileName,
-        title,
-        description,
-        thumbnailUrl
-      );
+      await SaveVideoMetaData(content);
 
       ch1.ack(msg);
       console.log("Acknowledge sent");
@@ -42,15 +47,16 @@ const ChannelModel = require("../models/ChannelModel");
   });
 })();
 
-async function SaveVideoMetaData(
+// Might have error
+async function SaveVideoMetaData({
   username,
   dp,
   vidId,
   m3u8,
   title,
   description,
-  thumbnailUrl
-) {
+  thumbnailUrl,
+}: VideoContent) {
   try {
     const video = new Video({
       username: username,
@@ -74,12 +80,12 @@ async function SaveVideoMetaData(
   }
 }
 
-async function processVideo(inputFilePath) {
+async function processVideo(inputFilePath: string) {
   // Input and output file paths
   const uniqueId = Date.now();
   const outputDirectory = "./output/";
   const manifestFileName = `${uniqueId}.m3u8`;
-  const manifestPath = path.join(outputDirectory, `${manifestFileName}`);
+  const manifestPath = join(outputDirectory, `${manifestFileName}`);
 
   const resolutions = [
     "256x144",
@@ -91,7 +97,7 @@ async function processVideo(inputFilePath) {
   ];
 
   const promises = resolutions.map((resolution) => {
-    const outputFilePath = path.join(
+    const outputFilePath = join(
       outputDirectory,
       `${resolution}-output-${uniqueId}.m3u8`
     );
@@ -127,13 +133,14 @@ async function processVideo(inputFilePath) {
       const manifestContent = outputFilePaths
         .map((outputPath) => {
           // Extract the filename from the output path
-          const filename = path.basename(outputPath);
+          // @ts-ignore
+          const filename = basename(outputPath);
           return `#EXTINF:1.000,\n${filename}`;
         })
         .join("\n");
 
       // Write the manifest content to the manifest file
-      fs.writeFileSync(manifestPath, manifestContent);
+      writeFileSync(manifestPath, manifestContent);
 
       console.log("Manifest file created:", manifestPath);
     })
@@ -144,24 +151,24 @@ async function processVideo(inputFilePath) {
   return manifestFileName;
 }
 
-module.exports.stream = (req, res) => {
+export function stream(req: Request, res: Response) {
   const manifestFileName = req.params.manifest;
-  const manifestPath = path.join(__dirname, "..", "output", manifestFileName);
+  const manifestPath = join(__dirname, "..", "output", manifestFileName);
 
-  if (!fs.existsSync(manifestPath))
+  if (!existsSync(manifestPath))
     return res.status(404).json({ status: false, msg: "No Such File Exists" });
 
   res.setHeader("Content-Type", "application/vnd.apple.mpegurl");
-  fs.createReadStream(manifestPath).pipe(res);
-};
+  createReadStream(manifestPath).pipe(res);
+}
 
-module.exports.getFile = (req, res) => {
+export function getFile(req: Request, res: Response) {
   const manifestFileName = req.params.file;
-  const manifestPath = path.join(__dirname, "..", "output", manifestFileName);
+  const manifestPath = join(__dirname, "..", "output", manifestFileName);
 
-  if (!fs.existsSync(manifestPath))
+  if (!existsSync(manifestPath))
     return res.status(404).json({ status: false, msg: "No Such File Exists" });
 
   res.setHeader("Content-Type", "application/vnd.apple.mpegurl");
-  fs.createReadStream(manifestPath).pipe(res);
-};
+  createReadStream(manifestPath).pipe(res);
+}

@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import { Schema, model } from "mongoose";
 
-const videoSchema = new mongoose.Schema({
+const videoSchema = new Schema({
   username: {
     type: String,
     require: true,
@@ -34,6 +34,6 @@ const videoSchema = new mongoose.Schema({
   },
 });
 
-const videoModel = mongoose.model("videoModel", videoSchema);
+const videoModel = model("videoModel", videoSchema);
 
-module.exports = videoModel;
+export default videoModel;

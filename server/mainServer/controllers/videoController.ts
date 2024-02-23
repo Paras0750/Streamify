@@ -14,6 +14,7 @@ export const getVideoFeed = async (req: CustomReq, res: Response) => {
   const { username } = req.user;
 
   const subscribed = await SubscribedModel.find({ username });
+  // @ts-ignore
   subscribed = subscribed.subscribed; 
 
   const feed = await videoModel.find({ username: { $in: subscribed } });

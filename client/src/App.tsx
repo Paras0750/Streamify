@@ -1,4 +1,3 @@
-// import "./App.css";
 import { useEffect, useState } from "react";
 import { ThemeContext } from "./Context/ThemeContext.tsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -11,7 +10,6 @@ import UploadVideo from "./Pages/UploadVideo/UploadVideo.tsx";
 import VideoPlayer from "./Pages/VideoPlayer/VideoPage.tsx";
 import ChannelView from "./Pages/Channel/ChannelView.tsx";
 
-
 const App: React.FC = () => {
   const [theme, setTheme] = useState("light");
 
@@ -22,26 +20,24 @@ const App: React.FC = () => {
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>
-        <div
-          className={`${theme} ${
-            theme === "dark" ? "bg-[#202020]" : ""
-          } min-h-[100vh]`}
-          >
-
-          <Header />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/createChannel" element={<CreateChannel />} />
-              <Route path="/uploadVideo" element={<UploadVideo />} />
-              <Route path="/playVideo/:id" element={<VideoPlayer />} />
-              <Route path="/channel/:channelId" element={<ChannelView />} />
-            </Routes>
-          </BrowserRouter>
-
-        </div>
+      <div
+        className={`${theme} ${
+          theme === "dark" ? "bg-[#202020]" : ""
+        } min-h-[100vh]`}
+      >
+        <Header />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/createChannel" element={<CreateChannel />} />
+            <Route path="/uploadVideo" element={<UploadVideo />} />
+            <Route path="/playVideo/:id" element={<VideoPlayer />} />
+            <Route path="/channel/:channelId" element={<ChannelView />} />
+          </Routes>
+        </BrowserRouter>
+      </div>
     </ThemeContext.Provider>
   );
 };

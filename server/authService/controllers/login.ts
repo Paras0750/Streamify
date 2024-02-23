@@ -1,12 +1,11 @@
-const mongoose = require("mongoose");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
+import { sign } from "jsonwebtoken";
+import { compare } from "bcryptjs";
 
-const User = require("../models/User");
+import User from "../models/User";
+import { Request, Response } from "express";
 
-module.exports = async (req, res) => {
+export default async (req: Request, res: Response) => {
   try {
-
     const { email, password } = req.body;
 
     if (!email || !password)
@@ -15,18 +14,18 @@ module.exports = async (req, res) => {
     const findUser = await User.findOne({ email: email }); // Await the result here
     if (!findUser)
       return res.status(400).json({ error: "User does not exist" });
-    const isMatch = await bcrypt.compare(password, findUser.password);
+    const isMatch = await compare(password, findUser.password);
 
     if (!isMatch) return res.status(400).json({ error: "Invalid credentials" });
 
-    const token = jwt.sign(
+    const token = sign(
       { id: findUser._id, username: findUser.userName },
-      process.env.JWT_SECRET,
+      process.env.JWT_SECRET || "",
       {
         expiresIn: "7d",
       }
     );
-    
+
     res.status(200).json({
       token,
       user: {

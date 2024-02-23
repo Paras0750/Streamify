@@ -1,8 +1,10 @@
 require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
+import express, { json, urlencoded } from "express";
+import cors from "cors";
 
-require("./modules/db")();
+import db from "./modules/db";
+db();
+import authRoutes from "./routes/auth";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -14,10 +16,10 @@ app.use(cors(
     optionsSuccessStatus: 204,
   }
 ));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(json());
+app.use(urlencoded({ extended: true }));
 
-app.use("/api/auth", require("./routes/auth"));
+app.use("/api/auth", authRoutes);
 
 app.listen(PORT, () => {
   console.log(`Auth Service Started on ${PORT}`);

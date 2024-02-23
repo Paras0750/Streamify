@@ -30,11 +30,17 @@ app.post("/upload", upload.single("file"), (req: Request, res: Response) => {
   res.send("File uploaded successfully");
 });
 
-app.use("/getFile", express.static(path.join(__dirname, "S3Bucket/")));
+const s3BucketPath = path.join(__dirname, "../S3Bucket/");
+app.use("/getFile", express.static(s3BucketPath));
 
 // Routes
 app.use("/api/app", channelRoutes);
 app.use("/api/app", subscriptionRoutes);
 app.use("/api/app", videoRoutes);
+
+app.get("/", (req, res) => {
+  console.log("req received");
+  res.send("Main server!");
+});
 
 app.listen(PORT, () => console.log(`Main Server Started on port ${PORT}`));

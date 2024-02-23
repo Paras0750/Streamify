@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const likeSchema = new mongoose.Schema({
   videoId: {
@@ -17,4 +17,4 @@ const likeSchema = new mongoose.Schema({
 
 const likeModel = mongoose.model("likeCountModel", likeSchema);
 
-module.exports = likeModel;
+export default likeModel;

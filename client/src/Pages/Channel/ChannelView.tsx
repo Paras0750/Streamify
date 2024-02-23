@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 import SideNavigationLayout from "../../Components/layout/SideNavigationLayout";
 import VideoSection from "../../Components/VideoSection";
 import { useEffect, useState } from "react";
@@ -6,7 +6,7 @@ import { getFeed } from "../../Services/mainService";
 import { VideoStruct } from "../Home/HomePage";
 
 const ChannelView = () => {
-  const { channelId } = useParams<string>();
+  // const { channelId } = useParams<string>();
   const [videoFeed, setVideoFeed] = useState<[VideoStruct] | []>([]);
 
   useEffect(() => {

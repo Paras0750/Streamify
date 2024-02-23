@@ -12,7 +12,7 @@ const UploadVideo = () => {
     const text = e.target.value;
     setTitle(text);
   };
-  const handleDescriptionChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleDescriptionChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const text = e.target.value;
     setDescription(text);
   };
@@ -29,7 +29,7 @@ const UploadVideo = () => {
     if (file) setUploadedThumbnail(file);
   };
 
-  const handleSubmit = async (e: SubmitEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData();
 

@@ -74,15 +74,17 @@ export const pushHistory = async (req: CustomReq, res: Response) => {
 
   let history = await historyModel.findOne({ username });
   if (!history) await historyModel.create({ username, history: [vid] });
-
+  // @ts-ignore
   history = history?.history;
-
+  // @ts-ignore
   const index = history.indexOf(vid);
 
   if (index > -1) {
+    // @ts-ignore
     history.splice(index, 1);
   }
 
+  // @ts-ignore
   history.push(vid);
   await historyModel.findOneAndUpdate({ username }, { history });
   res.status(200).json({ status: true });
@@ -92,10 +94,12 @@ export const pushHistory = async (req: CustomReq, res: Response) => {
 export const getHistory = async (req: CustomReq, res: Response) => {
   const { username } = req.user;
   let history = await historyModel.findOne({ username });
+  // @ts-ignore
   history = history.history;
   console.log(history);
 
   // array of object ids of videos
+  // @ts-ignore
   let arrOfObjHistory = history.map((id) => new mongoose.Types.ObjectId(id));
 
   // $in is used to find all the documents with the _id in the array
