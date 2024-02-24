@@ -9,9 +9,10 @@ export const createCollections = async (req: CustomReq, res: Response) => {
   let isSubscriberModel = await subscriberModel.findOne({ username });
   let isSubscribedModel = await subscribedModel.findOne({ username });
 
-  console.log(isSubscriberModel);
   if (isSubscriberModel || isSubscribedModel) {
-    res.status(500).json({ status: false, msg: "Username Already Exists" });
+    return res
+      .status(500)
+      .json({ status: false, msg: "Username Already Exists" });
   }
 
   const createSubscriber = await subscriberModel.create({
@@ -20,7 +21,9 @@ export const createCollections = async (req: CustomReq, res: Response) => {
   });
 
   if (!createSubscriber)
-    res.status(500).json({ status: false, msg: "Error creating collections" });
+    return res
+      .status(500)
+      .json({ status: false, msg: "Error creating collections" });
 
   const createSubscribed = await subscribedModel.create({
     username,

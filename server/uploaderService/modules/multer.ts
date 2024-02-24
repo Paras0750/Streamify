@@ -13,13 +13,13 @@ export interface CustomRequest extends Request {
 const storage = diskStorage({
   destination: (req: Request, file: CustomeFile, cb) => {
     console.log("Recieved file");
-    var uploadPath = join(__dirname, "../../mainServer/S3Bucket/");
+    var uploadPath = join(__dirname, "../../../mainServer/S3Bucket/");
 
     if (file.fieldname === "video") {
-      uploadPath = join(__dirname, "../../mainServer/S3Bucket/Videos/");
+      uploadPath = join(__dirname, "../../../mainServer/S3Bucket/Videos/");
     }
     if (file.fieldname === "thumbnail") {
-      uploadPath = join(__dirname, "../../mainServer/S3Bucket/Thumbnails/");
+      uploadPath = join(__dirname, "../../../mainServer/S3Bucket/Thumbnails/");
     }
 
     if (!existsSync(uploadPath)) {

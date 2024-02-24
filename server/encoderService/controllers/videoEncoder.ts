@@ -37,7 +37,18 @@ interface VideoContent {
       // @ts-ignore
       dp = dp.displayPic;
 
-      await SaveVideoMetaData(content);
+      const videoContent: VideoContent = {
+        username,
+        // @ts-ignore
+        dp,
+        vidId,
+        m3u8: manifestFileName,
+        title,
+        description,
+        thumbnailUrl,
+      };
+
+      await SaveVideoMetaData(videoContent);
 
       ch1.ack(msg);
       console.log("Acknowledge sent");
@@ -89,11 +100,11 @@ async function processVideo(inputFilePath: string) {
 
   const resolutions = [
     "256x144",
-    "426x240",
-    "640x360",
-    "854x480",
-    "1280x720",
-    "1920x1080",
+    // "426x240",
+    // "640x360",
+    // "854x480",
+    // "1280x720",
+    // "1920x1080",
   ];
 
   const promises = resolutions.map((resolution) => {

@@ -13,14 +13,17 @@ import channelModel from "../models/ChannelModel";
 export const getVideoFeed = async (req: CustomReq, res: Response) => {
   const { username } = req.user;
 
-  const subscribed = await SubscribedModel.find({ username });
+  let subscribed = await SubscribedModel.find({ username });
+  if (subscribed.length === 0) {
+    return res.status(200).json({ status: true, feed: [] });
+  }
   // @ts-ignore
-  subscribed = subscribed.subscribed; 
+  subscribed = subscribed.subscribed;
 
   const feed = await videoModel.find({ username: { $in: subscribed } });
 
   if (feed.length > 0) res.status(200).json({ status: true, feed });
-  else res.status(400).json({ status: false, msg: "Failed to get feed" });
+  else res.status(400).json({ status: true, feed: [] });
 };
 
 export const getVideo = async (req: CustomReq, res: Response) => {
